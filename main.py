@@ -116,7 +116,6 @@ def download_and_extract_tools():
 
     os.remove(zip_name)
 
-    # Linux/Mac için çalıştırma izni ver
     if system != "Windows":
         os.chmod(ADB, 0o755)
         os.chmod(FASTBOOT, 0o755)
@@ -159,7 +158,6 @@ def bootloader_unlocked(fastboot_cmd):
     elif "unlocked: no" in output:
         return False
     else:
-        # Detaylı çıktı da yazabiliriz
         print(output.strip())
         return None
 
@@ -172,7 +170,6 @@ def main():
 
     fastboot_cmd = FASTBOOT if adb_cmd == ADB else "fastboot"
 
-    # Cihaz zaten bootloader modundaysa
     if fastboot_device_connected(fastboot_cmd):
         print(_(f"bootloader_already"))
         print(_(f"checking_bl"))
@@ -184,12 +181,10 @@ def main():
             time.sleep(2)
             if confirm(_(f"unlocking")):
                 print(_(f"unlocking_in_progress"))
-                # Buraya unlock komutu eklenebilir
         else:
             print(_(f"bl_unknown"))
         return
 
-    # ADB modunda cihaz var mı?
     print(_(f"connect_device"))
 
     if not device_connected(adb_cmd):
@@ -208,7 +203,7 @@ def main():
     if confirm("Bootloader'a (Fastboot) geçmek ister misiniz?"):
         run(f"{adb_cmd} reboot bootloader")
         print(_(f"checking_bl"))
-        time.sleep(5)  # Bootloader moduna geçiş için bekle
+        time.sleep(5) 
         if fastboot_device_connected(fastboot_cmd):
             unlocked = bootloader_unlocked(fastboot_cmd)
             if unlocked is True:
@@ -218,7 +213,7 @@ def main():
                 time.sleep(2)
                 if confirm(_(f"unlocking")):
                     print(_(f"unlocking_in_progress"))
-                    # Buraya bootloader unlock komutunu ekleyebilirsin
+
             else:
                 print(_(f"bl_unknown"))
         else:
