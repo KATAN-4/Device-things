@@ -85,7 +85,3 @@ g++ main.cpp -o device-things
 ```
 
 ---
-
-## 📄 Lisans
-
-MIT Lisansı
