@@ -1,0 +1,13 @@
+device_info=📱 Device Model: 
+codename_info=🆔 Codename: 
+root_detected=❌ Device is already rooted!
+no_root=⚠️ Root not detected!
+ask_bootloader=🔧 Reboot to bootloader? [Y/n]: 
+ask_unlock=🔓 Bootloader locked!\n💀 WARNING: All data will be erased!\nUnlock it? [Y/n]: 
+ask_boot_img=🖥️ Enter patched boot.img path: 
+unlocked=✅ Bootloader already unlocked!
+flashing=⚡ Flashing boot image...
+success=🎉 Success! Rebooting device...
+error=❌ Error: ADB/Fastboot not found!
+rebooting=🔄 Rebooting device...
+canceled=🚫 Operation canceled
