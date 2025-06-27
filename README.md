@@ -1,4 +1,3 @@
-Here's the revised version with complete bilingual support (English & Turkish) for every section:
 
 markdown
 # Device-things
