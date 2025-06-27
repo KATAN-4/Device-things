@@ -1,90 +1,109 @@
-````markdown
+Here's the revised version with complete bilingual support (English & Turkish) for every section:
+
+markdown
 # Device-things
 
----
-
-## Türkçe
-
-### Açıklama
-Device-things, Android cihazlarda root kontrolü, bootloader durumu kontrolü ve bootloader üzerinden boot image flaşlama işlemleri yapabilen basit bir C++ komut satırı aracıdır. Kullanıcı dostu dil desteği (Türkçe ve İngilizce) ile işlemler kolayca yönetilir.
-
-### Özellikler
-- Android cihaz model ve kod adını gösterir.
-- Root erişimini kontrol eder.
-- Bootloader durumunu sorgular.
-- Bootloader kilidini açma işlemi yapabilir.
-- Boot image dosyasını fastboot üzerinden flaşlayabilir.
-- Kullanıcıdan onay alarak işlemleri yönetir.
-- Otomatik dil algılama ve destek (Türkçe / İngilizce).
-
-### Gereksinimler
-- ADB ve Fastboot araçlarının sistemde yüklü olması.
-- C++17 veya üzeri uyumlu derleyici.
-- Android cihazınızda USB hata ayıklama ve gerekli izinlerin aktif olması.
-
-### Kullanım
-1. Projeyi derleyin:
-   ```bash
-   g++ main.cpp -o device-things
-````
-
-2. Programı çalıştırın:
-
-   ```bash
-   ./device-things
-   ```
-3. İstenilen adımları takip edin. Dil otomatik algılanır, isterseniz çevrim içi veya yerel ortam dil ayarları ile Türkçe veya İngilizce olarak çalışır.
-
-### Önemli Notlar
-
-* Root kontrolü birkaç farklı komut ile yapılır, bazı cihazlarda farklılık gösterebilir.
-* Bootloader kilidini açmak cihazdaki tüm verileri silecektir, dikkatli olunuz.
-* Program temel seviye araçlar içerir, gelişmiş özellikler için modifikasyon yapabilirsiniz.
-* `lang.h` dosyası ile dil desteği yönetilmektedir.
+> ⚙️ A tool to check Android device info, root status, and optionally unlock bootloader + flash boot image.  
+> 📱 Android cihaz bilgilerini kontrol eden, root durumunu algılayan ve isteğe bağlı olarak bootloader kilidini açıp boot.img flashlayan bir araç.
 
 ---
 
-## English
+## 📋 Description / Açıklama
+**English**  
+C++ CLI tool for Android device diagnostics and fastboot automation. Detects root status, shows device info, and handles bootloader operations.
 
-### Description
-
-Device-things is a simple C++ command-line tool to check Android device root status, bootloader state, and flash boot images via bootloader. It supports Turkish and English languages for user-friendly interaction.
-
-### Features
-
-* Displays Android device model and codename.
-* Checks for root access.
-* Queries bootloader lock status.
-* Can unlock the bootloader.
-* Flash boot images using fastboot.
-* Asks for user confirmation before actions.
-* Automatic language detection (Turkish / English).
-
-### Requirements
-
-* ADB and Fastboot tools installed on the system.
-* C++17 or later compatible compiler.
-* USB debugging and proper permissions enabled on the Android device.
-
-### Usage
-
-1. Compile the project:
-
-   ```bash
-   g++ main.cpp -o device-things
-   ```
-2. Run the program:
-
-   ```bash
-   ./device-things
-   ```
-3. Follow on-screen instructions. Language is auto-detected and supports Turkish or English based on your system locale or input.
-
-### Important Notes
-
-* Root detection is performed via multiple commands and may vary between devices.
-* Unlocking the bootloader will erase all user data; proceed carefully.
-* This program offers basic functionality; you can modify it for more advanced features.
-* Language support is managed via the `lang.h` header file.
+**Türkçe**  
+Android cihaz tanılama ve fastboot otomasyonu için C++ terminal aracı. Root durumunu tespit eder, cihaz bilgilerini gösterir ve bootloader işlemlerini yönetir.
 
 ---
+
+## ✅ Features / Özellikler
+**English**  
+- Detects root access (`su`, `magisk`, binaries)
+- Shows device brand/model/codename
+- Checks bootloader unlock status
+- Unlocks bootloader (optional)
+- Flashes boot images (optional)
+- Auto-detects system language
+
+**Türkçe**  
+- Root erişimini tespit eder (`su`, `magisk`, binary'ler)
+- Cihaz marka/model/kod adı gösterir
+- Bootloader kilitsizlik durumunu kontrol eder
+- Bootloader kilidini açar (isteğe bağlı)
+- Boot imajlarını flashlar (isteğe bağlı)
+- Sistem dilini otomatik algılar
+
+---
+
+## 🛠 Requirements / Gereksinimler
+**English**  
+- Linux OS (Debian-based tested)
+- `adb` and `fastboot` installed
+- USB debugging enabled
+- Android device connected
+
+**Türkçe**  
+- Linux işletim sistemi (Debian tabanlı test edildi)
+- `adb` ve `fastboot` kurulu olmalı
+- USB hata ayıklama etkinleştirilmeli
+- Android cihaz bağlı olmalı
+
+---
+
+## 🚀 Usage / Kullanım
+```bash
+# Both languages / Her iki dil
+g++ main.cpp -o device-things
+./device-things
+```
+
+---
+
+## ⚠️ Warnings / Uyarılar
+**English**  
+- Unlocking bootloader ERASES ALL DATA!
+- Incorrect flashing may brick device
+- Use at your own risk
+- Backup critical data first
+
+**Türkçe**  
+- Bootloader'ı açmak TÜM VERİLERİ SİLER!
+- Yanlış flashlama cihazı bozabilir
+- Kullanım kullanıcı sorumluluğundadır
+- Önemli verileri yedekleyin
+
+---
+
+## 🌐 Language Support / Dil Desteği
+**English**  
+- Automatically switches based on system `LANG`
+- Supports English (en) and Turkish (tr)
+- Contribute translations via GitHub
+
+**Türkçe**  
+- Sistem `LANG` değişkenine göre otomatik seçer
+- İngilizce (en) ve Türkçe (tr) destekler
+- Çeviriler için GitHub'dan katkı yapabilirsiniz
+
+---
+
+## 📂 Project Structure / Proje Yapısı
+```
+.
+├── main.cpp          // Main logic / Ana mantık
+├── lang.h            // Language manager / Dil yöneticisi
+├── README.md         // This document / Bu belge
+└── LICENSE           // Usage terms / Kullanım şartları
+```
+
+---
+
+## ❓ FAQ / SSS
+**English**  
+Q: Can I use this on Windows?  
+A: No, Linux-only due to USB stack differences.
+
+**Türkçe**  
+S: Windows'ta kullanabilir miyim?  
+C: Hayır, sadece Linux'ta çalışır (USB yapısı farklılıkları nedeniyle).
