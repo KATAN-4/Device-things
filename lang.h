@@ -3,6 +3,8 @@
 
 #include <string>
 #include <map>
+#include <fstream>  
+#include <stdexcept> 
 
 class LanguageManager {
 public:
@@ -12,6 +14,7 @@ public:
 
 private:
     static std::map<std::string, std::map<std::string, std::string>> translations;
+    static std::string trim(const std::string& str); // Yardımcı fonksiyon
 };
 
 #endif
