@@ -6,20 +6,23 @@
 #include <algorithm>
 #include <cctype>
 #include <cstring>
+#include <fstream>
+#include <stdexcept>
+
+using namespace std;
 
 // Sistem komutları
-int executeCommand(const std::string& cmd, bool silent = true) {
-    std::string full_cmd = silent ? cmd + " >/dev/null 2>&1" : cmd;
+int executeCommand(const string& cmd, bool silent = true) {
+    string full_cmd = silent ? cmd + " >/dev/null 2>&1" : cmd;
     return system(full_cmd.c_str());
 }
 
-std::string executeCommandWithOutput(const std::string& cmd) {
-    std::string result;
+string executeCommandWithOutput(const string& cmd) {
+    string result;
     char buffer[128];
     FILE* pipe = popen(cmd.c_str(), "r");
     if (!pipe) return "";
     
-    // Hata düzeltildi: nullptr kontrolü ve doğru parantez kullanımı
     while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
         result += buffer;
     }
@@ -32,11 +35,46 @@ std::string executeCommandWithOutput(const std::string& cmd) {
     return result;
 }
 
+// Cihaz kontrol fonksiyonları
+bool isDeviceConnected() {
+    return executeCommand("adb devices | grep -w device") == 0;
+}
+
+bool isHuaweiDevice() {
+    string hardware = executeCommandWithOutput("adb shell getprop ro.hardware");
+    string platform = executeCommandWithOutput("adb shell getprop ro.board.platform");
+    
+    transform(hardware.begin(), hardware.end(), hardware.begin(), ::tolower);
+    transform(platform.begin(), platform.end(), platform.begin(), ::tolower);
+    
+    return (hardware.find("hi") == 0 || 
+            hardware.find("kirin") == 0 ||
+            platform.find("hi") == 0 ||
+            platform.find("kirin") == 0);
+}
+
+bool isXiaomiDevice() {
+    string brand = executeCommandWithOutput("adb shell getprop ro.product.brand");
+    string manufacturer = executeCommandWithOutput("adb shell getprop ro.product.manufacturer");
+    string hardware = executeCommandWithOutput("adb shell getprop ro.hardware");
+    
+    // Tümünü küçük harfe çevir
+    transform(brand.begin(), brand.end(), brand.begin(), ::tolower);
+    transform(manufacturer.begin(), manufacturer.end(), manufacturer.begin(), ::tolower);
+    transform(hardware.begin(), hardware.end(), hardware.begin(), ::tolower);
+    
+    // Xiaomi, Redmi, POCO ve işlemci kontrolü (qcom/mediatek)
+    return (brand == "xiaomi" || brand == "redmi" || brand == "poco" ||
+            manufacturer == "xiaomi" ||
+            hardware.find("qcom") != string::npos || 
+            hardware.find("mt") == 0); // Mediatek işlemciler mt ile başlar
+}
+
 // Cihaz bilgileri
-std::string getDeviceModel() {
-    std::string brand = executeCommandWithOutput("adb shell getprop ro.product.brand");
-    std::string model = executeCommandWithOutput("adb shell getprop ro.product.model");
-    std::string market_name = executeCommandWithOutput("adb shell getprop ro.product.marketname");
+string getDeviceModel() {
+    string brand = executeCommandWithOutput("adb shell getprop ro.product.brand");
+    string model = executeCommandWithOutput("adb shell getprop ro.product.model");
+    string market_name = executeCommandWithOutput("adb shell getprop ro.product.marketname");
     
     if (!brand.empty()) brand[0] = toupper(brand[0]);
     if (market_name.empty()) {
@@ -46,8 +84,8 @@ std::string getDeviceModel() {
     return market_name.empty() ? brand + " " + model : market_name;
 }
 
-std::string getCodename() {
-    std::string codename = executeCommandWithOutput("adb shell getprop ro.product.device");
+string getCodename() {
+    string codename = executeCommandWithOutput("adb shell getprop ro.product.device");
     if (codename.empty()) {
         codename = executeCommandWithOutput("adb shell getprop ro.product.vendor.device");
     }
@@ -62,88 +100,143 @@ bool isRooted() {
 }
 
 bool isBootloaderUnlocked() {
-    std::string result = executeCommandWithOutput("fastboot getvar unlocked 2>&1");
-    return result.find("unlocked: yes") != std::string::npos;
+    string result = executeCommandWithOutput("fastboot getvar unlocked 2>&1");
+    return result.find("unlocked: yes") != string::npos;
 }
 
 // Onay mekanizması
-bool confirm(const std::string& prompt, bool default_yes = true) {
-    std::cout << prompt;
-    std::string input;
-    std::getline(std::cin, input);
+bool confirm(const string& prompt, bool default_yes = true) {
+    cout << prompt;
+    string input;
+    getline(cin, input);
     
     if (input.empty()) return default_yes;
     
+    transform(input.begin(), input.end(), input.begin(), ::tolower);
     if (LanguageManager::currentLanguage == "tr") {
-        return (input == "E" || input == "e");
+        return (input == "e" || input == "y");
     } else {
-        return (input == "Y" || input == "y");
+        return (input == "y");
     }
 }
 
 // Bootloader işlemleri
 void unlockBootloader() {
+    cout << LanguageManager::get("unlocking") << endl;
     executeCommand("fastboot flashing unlock", false);
     executeCommand("fastboot flashing unlock_critical", false);
     executeCommand("fastboot reboot bootloader", false);
-    sleep(3);
+    sleep(5);
 }
 
 void flashBootImage() {
-    std::string path;
-    std::cout << LanguageManager::get("ask_boot_img");
-    std::getline(std::cin, path);
+    string path;
+    cout << LanguageManager::get("ask_boot_img");
+    getline(cin, path);
     
     if (!path.empty()) {
-        std::cout << LanguageManager::get("flashing") << std::endl;
-        executeCommand("fastboot flash boot " + path, false);
-        std::cout << LanguageManager::get("success") << std::endl;
-        executeCommand("fastboot reboot", false);
+        cout << LanguageManager::get("flashing") << endl;
+        if (executeCommand("fastboot flash boot " + path, false) == 0) {
+            cout << LanguageManager::get("success") << endl;
+            executeCommand("fastboot reboot", false);
+        } else {
+            cout << LanguageManager::get("error") << endl;
+        }
     }
 }
 
 // Ana fonksiyon
 int main() {
-    // Dil yükleme
-    const char* lang_env = getenv("LANG");
-    std::string lang = "en";
-    if (lang_env) {
-        std::string lang_str(lang_env);
-        if (lang_str.find("tr") != std::string::npos) {
-            lang = "tr";
+    try {
+        // Dil yükleme
+        const char* lang_env = getenv("LANG");
+        string lang = "en";
+        if (lang_env) {
+            string lang_str(lang_env);
+            if (lang_str.find("tr") != string::npos) {
+                lang = "tr";
+            }
         }
-    }
-    LanguageManager::loadLanguage(lang);
+        LanguageManager::loadLanguage(lang);
 
-    // Cihaz bilgileri
-    std::cout << LanguageManager::get("device_info") << getDeviceModel() << std::endl;
-    std::cout << LanguageManager::get("codename_info") << getCodename() << std::endl;
+        // Cihaz bağlantı kontrolü
+        if (!isDeviceConnected()) {
+            cout << LanguageManager::get("no_device") << endl;
+            return EXIT_FAILURE;
+        }
 
-    // Root kontrol
-    if (isRooted()) {
-        std::cout << LanguageManager::get("root_detected") << std::endl;
-        return EXIT_SUCCESS;
-    }
+        // Üretici kontrolleri
+        if (isHuaweiDevice()) {
+            string model = getDeviceModel();
+            string hardware = executeCommandWithOutput("adb shell getprop ro.hardware");
+            
+            cout << LanguageManager::get("huawei_header") << endl;
+            cout << LanguageManager::get("device_model") << model << endl;
+            cout << LanguageManager::get("device_hardware") << hardware << endl;
+            cout << LanguageManager::get("huawei_not_supported") << endl;
+            cout << LanguageManager::get("huawei_reason") << endl;
+            cout << LanguageManager::get("footer") << endl;
+            return EXIT_FAILURE;
+        }
 
-    std::cout << LanguageManager::get("no_root") << std::endl;
+        if (isXiaomiDevice()) {
+            string brand = executeCommandWithOutput("adb shell getprop ro.product.brand");
+            string model = getDeviceModel();
+            transform(brand.begin(), brand.end(), brand.begin(), ::tolower);
+            
+            if (brand == "poco") {
+                cout << LanguageManager::get("poco_header") << endl;
+                cout << LanguageManager::get("poco_note") << endl;
+            } 
+            else if (brand == "redmi") {
+                cout << LanguageManager::get("redmi_header") << endl;
+                cout << LanguageManager::get("redmi_note") << endl;
+            }
+            else {
+                cout << LanguageManager::get("xiaomi_header") << endl;
+                cout << LanguageManager::get("xiaomi_note") << endl;
+            }
+            
+            cout << LanguageManager::get("device_model") << model << endl;
+            cout << LanguageManager::get("footer") << endl;
+            
+            if (!confirm(LanguageManager::get("continue_anyway"))) {
+                return EXIT_SUCCESS;
+            }
+        }
 
-    // Bootloader'a geçiş
-    if (confirm(LanguageManager::get("ask_bootloader"))) {
-        executeCommand("adb reboot bootloader");
-        sleep(5);
+        // Cihaz bilgilerini göster
+        cout << LanguageManager::get("device_info") << getDeviceModel() << endl;
+        cout << LanguageManager::get("codename_info") << getCodename() << endl;
 
-        // Bootloader kontrol
-        if (isBootloaderUnlocked()) {
-            std::cout << LanguageManager::get("unlocked") << std::endl;
-            flashBootImage();
-        } else if (confirm(LanguageManager::get("ask_unlock"))) {
-            unlockBootloader();
-            flashBootImage();
+        // Root kontrolü
+        if (isRooted()) {
+            cout << LanguageManager::get("root_detected") << endl;
+            return EXIT_SUCCESS;
+        }
+        cout << LanguageManager::get("no_root") << endl;
+
+        // Bootloader işlemleri
+        if (confirm(LanguageManager::get("ask_bootloader"))) {
+            executeCommand("adb reboot bootloader");
+            sleep(5);
+
+            if (isBootloaderUnlocked()) {
+                cout << LanguageManager::get("unlocked") << endl;
+                flashBootImage();
+            } else if (confirm(LanguageManager::get("ask_unlock"))) {
+                unlockBootloader();
+                flashBootImage();
+            } else {
+                cout << LanguageManager::get("canceled") << endl;
+            }
         } else {
-            std::cout << LanguageManager::get("canceled") << std::endl;
+            cout << LanguageManager::get("canceled") << endl;
         }
-    } else {
-        std::cout << LanguageManager::get("canceled") << std::endl;
+
+    } catch (const exception& e) {
+        cerr << LanguageManager::get("error_prefix") << e.what() << endl;
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
