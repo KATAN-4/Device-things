@@ -1,13 +1,42 @@
+# Device Information
 device_info=📱 Device Model: 
 codename_info=🆔 Codename: 
+
+# Root Status
 root_detected=❌ Device is already rooted!
 no_root=⚠️ Root not detected!
+
+# Bootloader Operations
 ask_bootloader=🔧 Reboot to bootloader? [Y/n]: 
 ask_unlock=🔓 Bootloader locked!\n💀 WARNING: All data will be erased!\nUnlock it? [Y/n]: 
 ask_boot_img=🖥️ Enter patched boot.img path: 
 unlocked=✅ Bootloader already unlocked!
 flashing=⚡ Flashing boot image...
 success=🎉 Success! Rebooting device...
-error=❌ Error: ADB/Fastboot not found!
 rebooting=🔄 Rebooting device...
 canceled=🚫 Operation canceled
+
+# Error Messages
+error=❌ Error: ADB/Fastboot not found!
+no_device=🔌 Error: No device connected!
+error_prefix=❌ Error: 
+
+# Manufacturer Specific
+huawei_header==== HUAWEI DEVICE DETECTED ===
+huawei_not_supported=❌ Your device is not supported
+huawei_reason=ℹ️ Reason: Bootloader unlock officially blocked
+
+xiaomi_header==== XIAOMI DEVICE DETECTED ===
+xiaomi_note=ℹ️ Note: Requires Mi Unlock Tool
+
+redmi_header==== REDMI DEVICE DETECTED ===
+redmi_note=ℹ️ Note: Needs Xiaomi account verification
+
+poco_header==== POCO DEVICE DETECTED ===
+poco_note=ℹ️ Note: 168-hour wait period may apply
+
+# Common Labels
+device_model=Model: 
+device_hardware=Hardware: 
+footer================================
+continue_anyway=⚠️ Continue anyway? [Y/n]: 
