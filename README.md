@@ -2,117 +2,107 @@
 
 # Device-things
 
-> ⚙️ A tool to check Android device info, root status, and optionally unlock bootloader + flash boot image.
-> 📱 Android cihaz bilgilerini kontrol eden, root durumunu algılayan ve isteğe bağlı olarak bootloader kilidini açıp boot.img flashlayan bir araç.
+> ⚙️ Android device info checker, root detection, bootloader unlocking, and boot image flashing CLI tool.
+> ⚙️ Android cihaz bilgisi kontrolü, root algılama, bootloader kilidini açma ve boot imajı flashlama için çok yönlü bir komut satırı aracı. 📱
 
 ---
 
-## 🇬🇧 English Description
+## Overview / Genel Bakış
 
-**Device-things** is a C++ command-line tool for Android device diagnostics and fastboot automation.
-It can detect root access, get model/codename info, and optionally unlock the bootloader or flash a boot image in fastboot mode.
+**Device-things** is a C++ CLI tool designed for Android developers and advanced users to easily view device info, check root status, manage bootloader status, and flash boot images via Fastboot. It includes special support for Xiaomi and Huawei devices. 🚀
+**Device-things**, Android geliştiricileri ve ileri seviye kullanıcılar için cihaz bilgilerini kolayca görüntülemek, root durumunu kontrol etmek, bootloader durumunu yönetmek ve Fastboot kullanarak boot imajı flashlamak amacıyla geliştirilmiş C++ tabanlı bir CLI aracıdır. Xiaomi ve Huawei gibi üreticilere özel işlemlerle uyumluluk artırılmıştır. 🚀
 
-### ✅ Features
+---
 
-* Detects if the device is rooted (su, magisk, or binaries)
-* Displays device brand/model and codename
-* Checks for bootloader unlock status
-* Optionally unlocks bootloader and flashes a custom boot.img
-* Manufacturer-specific handling for Xiaomi and Huawei
+## Key Features / Temel Özellikler
 
-### 🛠 Requirements
+* 🔍 **Root Detection:** Detects root via `su`, `magisk`, and system file checks.
+* 🔍 **Root Algılama:** `su`, `magisk` ve sistem dosyalarını kontrol ederek root durumunu tespit eder.
+* 📟 **Device Info:** Shows brand, model, and codename.
+* 📟 **Cihaz Bilgisi:** Marka, model ve kod adını görüntüler.
+* 🔓 **Bootloader Management:** Checks and unlocks bootloader if requested.
+* 🔓 **Bootloader Yönetimi:** Bootloader kilidinin açık olup olmadığını kontrol eder, istenirse kilidi açabilir.
+* 🔥 **Flashing:** Allows flashing `boot.img` via Fastboot.
+* 🔥 **Flashlama:** Fastboot üzerinden `boot.img` dosyası flashlama imkanı sunar.
+* 🤖 **Vendor Support:** Special warnings and support for Xiaomi and Huawei devices.
+* 🤖 **Üretici Desteği:** Xiaomi ve Huawei cihazlara özel uyarılar ve destek sağlar.
 
-* ADB and Fastboot installed (adb, fastboot commands)
-* Android device with USB Debugging enabled
-* Linux or Windows (tested on both)
+---
 
-### 🚀 Build & Run
+## System Requirements / Sistem Gereksinimleri
 
-**Linux:**
+* 📥 **ADB and Fastboot:** Must be installed and accessible from the command line.
+* 📥 **ADB ve Fastboot:** Komut satırından erişilebilir şekilde kurulu olmalıdır.
+* 📱 **Android Device:** USB debugging enabled and connected via USB.
+* 📱 **Android Cihaz:** USB hata ayıklama (debugging) açık ve USB ile bağlı olmalıdır.
+* 💻 **Supported OS:** Linux (Debian-based) and Windows.
+* 💻 **Desteklenen İşletim Sistemleri:** Linux (Debian tabanlı) ve Windows.
+
+---
+
+## Build & Usage / Derleme & Kullanım
+
+### Linux
+
+To build and run on Linux:
+Linux sürümünü derlemek ve çalıştırmak için:
 
 ```bash
 g++ main.cpp lang.cpp -o device-things
 ./device-things
 ```
 
-**Windows (with MinGW-w64 or cross-compiler):**
+### Windows
+
+To build and run on Windows (using MinGW-w64 or similar):
+Windows sürümünü MinGW-w64 veya benzeri derleyicilerle derlemek ve çalıştırmak için:
 
 ```bash
 g++ win_main.cpp lang.cpp -o device-things.exe
 device-things.exe
 ```
 
-Make sure `adb.exe` and `fastboot.exe` are in the same directory or in your system PATH on Windows.
+> ⚠️ Make sure `adb.exe` and `fastboot.exe` are in your PATH or in the executable’s directory on Windows.
+> ⚠️ Windows’ta `adb.exe` ve `fastboot.exe` dosyalarının PATH ortam değişkeninde olduğundan veya yürütülebilir dosyanın bulunduğu klasörde yer aldığından emin olun.
 
 ---
 
-## 🇹🇷 Türkçe Açıklama
+## Language Support / Dil Desteği
 
-**Device-things**, Android cihazlarda root kontrolü, cihaz bilgisi alma ve bootloader işlemleri yapmak için geliştirilen bir C++ terminal uygulamasıdır.
+Automatically selects language based on system language (`LANG` environment variable):
+Uygulama sisteminizin dil ayarlarına (`LANG` çevre değişkeni) göre otomatik dil seçimi yapar:
 
-### ✅ Özellikler
+* 🇹🇷 Turkish / Türkçe
+* 🇬🇧 English / İngilizce
 
-* Root var mı kontrol eder (su, magisk vs.)
-* Marka/model ve cihaz kod adını gösterir
-* Bootloader kilidi açık mı kontrol eder
-* İsteğe bağlı olarak bootloader kilidi açar ve boot.img yükler
-* Xiaomi & Huawei cihazlar için özel kontrol ve uyarılar
-
-### 🛠 Gereksinimler
-
-* ADB ve Fastboot kurulu olmalı (adb, fastboot komutları çalışmalı)
-* USB hata ayıklama açık bir Android cihaz
-* Linux veya Windows (ikisiyle de uyumlu)
-
-### 🚀 Derleme & Çalıştırma
-
-**Linux:**
-
-```bash
-g++ main.cpp lang.cpp -o device-things
-./device-things
-```
-
-**Windows (MinGW-w64 veya çapraz derleyici ile):**
-
-```bash
-g++ win_main.cpp lang.cpp -o device-things.exe
-device-things.exe
-```
-
-Windows’ta `adb.exe` ve `fastboot.exe`, çalıştırılabilir dosyayla aynı klasörde olmalı ya da sistem PATH değişkenine eklenmelidir.
+Translation files are located in `lang_tr.txt` and `lang_en.txt`.
+Çeviri dosyaları `lang_tr.txt` ve `lang_en.txt` içinde bulunmaktadır.
 
 ---
 
-## 🌐 Dil Desteği
+## Important Warnings / Önemli Uyarılar
 
-* Türkçe (`lang_tr.txt`)
-* İngilizce (`lang_en.txt`)
-
-Program sistem dili (`LANG`) üzerinden otomatik dil algılar. Manuel seçim gerekmez.
-
----
-
-## 📁 Proje Dosyaları
-
-```
-main.cpp           // Linux için kaynak kod
-win_main.cpp       // Windows için kaynak kod
-lang.cpp           // Dil sistemi implementasyonu
-lang.h             // Dil yönetimi başlığı
-lang_tr.txt        // Türkçe metinler
-lang_en.txt        // İngilizce metinler
-README.md          // Bu dosya
-device-things      // Linux için derlenmiş binary (opsiyonel)
-device-things.exe  // Windows için derlenmiş binary (opsiyonel)
-```
+* 🔐 **Unlocking bootloader** will erase all user data. Backup important data.
+* 🔐 **Bootloader Kilidini Açmak:** Bu işlem cihazdaki tüm kullanıcı verilerini silecektir. Önemli verilerinizi yedekleyin.
+* ⚠️ **Flashing risks:** Flashing an incompatible or wrong `boot.img` can cause device malfunction or soft-brick. Use with caution.
+* ⚠️ **Flashlama Riski:** Uyumsuz veya yanlış `boot.img` dosyasının flashlanması cihazda sorunlara veya soft-brick durumuna yol açabilir. Dikkatli olun.
+* 📛 **Disclaimer:** Provided “as-is” without warranty. Use at your own risk.
+* 📛 **Sorumluluk Reddi:** Yazılım “olduğu gibi” sağlanmaktadır. Kullanımı tamamen size ait olup oluşabilecek zararların sorumluluğu kullanıcıya aittir.
 
 ---
 
-## ⚠️ Uyarılar / Warnings
+## Project Structure / Proje Yapısı
 
-* Bootloader kilidini açmak cihazdaki tüm verileri siler.
-* Yanlış boot.img yüklemek cihazın açılmamasına neden olabilir.
-* Bu yazılımı kullanmak tamamen sizin sorumluluğunuzdadır.
+```
+main.cpp           # Linux source code / Linux için kaynak kod  
+win_main.cpp       # Windows source code / Windows için kaynak kod  
+lang.cpp           # Language management implementation / Dil yönetimi uygulaması  
+lang.h             # Language management header / Dil yönetimi başlık dosyası  
+lang_en.txt        # English translations / İngilizce çeviri metinleri  
+lang_tr.txt        # Turkish translations / Türkçe çeviri metinleri  
+README.md          # Project documentation / Proje dokümantasyonu  
+device-things      # Linux executable (optional) / Linux için derlenmiş çalıştırılabilir dosya (opsiyonel)  
+device-things.exe  # Windows executable (optional) / Windows için derlenmiş çalıştırılabilir dosya (opsiyonel)  
+```
 
 ---
