@@ -1,11 +1,9 @@
----
 
 # Device-things
 
 > ⚙️ Android device info checker, root detection, bootloader unlocking, and boot image flashing CLI tool.
 > ⚙️ Android cihaz bilgisi kontrolü, root algılama, bootloader kilidini açma ve boot imajı flashlama için çok yönlü bir komut satırı aracı. 📱
 
----
 
 ## Overview / Genel Bakış
 
