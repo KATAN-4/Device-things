@@ -1,13 +1,35 @@
 device_info=📱 Cihaz Modeli: 
 codename_info=🆔 Kod Adı: 
 root_detected=❌ Cihaz zaten rootlu!
-no_root=⚠️ Root algılanamadı!
+no_root=⚠️ Root tespit edilemedi!
 ask_bootloader=🔧 Bootloader'a geçilsin mi? [E/h]: 
-ask_unlock=🔓 Bootloader kilitli!\n💀 DİKKAT: Tüm veriler silinecek!\nKilidi açılsın mı? [E/h]: 
-ask_boot_img=🖥️ Patch'lenmiş boot.img yolunu girin: 
+ask_unlock=🔓 Bootloader kilitli!\n💀 UYARI: Tüm veriler silinecek!\nKilidi açılsın mı? [E/h]: 
+ask_boot_img=🖥️ Düzeltilmiş boot.img yolunu girin: 
 unlocked=✅ Bootloader zaten açık!
-flashing=⚡ Boot image flaşlanıyor...
+flashing=⚡ Boot imajı yükleniyor...
 success=🎉 Başarılı! Cihaz yeniden başlatılıyor...
 error=❌ Hata: ADB/Fastboot bulunamadı!
 rebooting=🔄 Cihaz yeniden başlatılıyor...
 canceled=🚫 İşlem iptal edildi
+no_device=🔌 Hata: Bağlı cihaz bulunamadı!
+
+# Üretici Özel Mesajlar
+huawei_header==== HUAWEI CIHAZ ALGILANDI ===
+huawei_not_supported=❌ Cihazınız desteklenmiyor ne yazık ki...
+huawei_reason=ℹ️ Sebep: Huawei cihazlarda bootloader kilidi açma resmi olarak desteklenmiyor
+
+xiaomi_header==== XIAOMI CIHAZ ALGILANDI ===
+xiaomi_note=ℹ️ Not: Xiaomi cihazlarda bootloader açmak için Mi Unlock gerekiyor
+
+redmi_header==== REDMI CIHAZ ALGILANDI ===
+redmi_note=ℹ️ Not: Redmi cihazlarda bootloader kilidi Xiaomi hesabıyla açılıyor
+
+poco_header==== POCO CIHAZ ALGILANDI ===
+poco_note=ℹ️ Not: POCO cihazlarda 168 saat bekleme süresi gerekebilir
+
+# Ortak Mesajlar
+device_model=Model: 
+device_hardware=Donanım: 
+footer================================
+error_prefix=❌ Hata: 
+continue_anyway=⚠️ Devam etmek istiyor musunuz? [E/h]: 
